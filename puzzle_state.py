@@ -7,6 +7,33 @@ class PuzzleState(object):
     """docstring for PuzzleState"""
 
     def __init__(self, dimension: int, config_input: list, goal, cost_function, parent=None, action="Initial", cost=0):
+        """
+        initialize the board state for the puzzle
+
+        sets up the board based on the given dimension and configuration input,
+        checks that the input length matches the expected board size.
+
+        Args:
+        - dimension (int): size of one dimension of the board (e.g., for a 3x3 board, dimension = 3)
+        - config_input (list): initial configuration of the board as a flat list of tiles
+        - goal: target board configuration for solving the puzzle
+        - cost_function: function to calculate the cost associated with this board state
+        - parent (optional): parent node, used to trace path in search algorithms
+        - action (str, optional): description of the action taken to reach this node, default is "Initial"
+        - cost (int, optional): initial cost of reaching this state, default is 0
+
+        Raises:
+        - AttributeError: if the config_input length doesn't match the board size
+
+        Attributes:
+        - board (list): 2D list representation of the board state
+        - config (list): stores the flat initial configuration
+        - children (list): holds child nodes generated from this node
+        - blank_row (int): row index of the blank tile
+        - blank_col (int): column index of the blank tile
+        - goal: stores the goal configuration
+        - cost_function: function for calculating node cost
+        """
 
         if dimension * dimension != len(config_input):
             raise AttributeError("The length of config entered is not correct")
@@ -32,6 +59,12 @@ class PuzzleState(object):
             print(self.board[i])
 
     def move_left(self):
+        """
+        Given the state of the current board, move the one step left.
+        This is equivalent to trying to pick the tile that can move left and doing so, if there is one.
+
+        :return: A new PuzzleState instance, that has moved the "left free" tile one step to the left.
+        """
         if self.blank_col == 0:
             return None
         else:
