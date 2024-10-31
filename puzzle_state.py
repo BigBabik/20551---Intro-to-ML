@@ -3,17 +3,16 @@ import resource
 import sys
 import math
 
-DIMENSION = 3
-
 class PuzzleState(object):
     """docstring for PuzzleState"""
 
-    def __init__(self, config_input: list, goal, cost_function, parent=None, action="Initial", cost=0):
+    def __init__(self, dimension: int, config_input: list, goal, cost_function, parent=None, action="Initial", cost=0):
 
-        if DIMENSION * DIMENSION != len(config_input):
+        if dimension * dimension != len(config_input):
             raise AttributeError("The length of config entered is not correct")
 
-        self.board = [config_input[i:i+3] for i in range(0, DIMENSION * DIMENSION, DIMENSION)]
+        self.board = [config_input[i:i+3] for i in range(0, dimension * dimension, dimension)]
+        self.dimension = dimension
         self.cost = cost
         self.parent = parent
         self.action = action
@@ -23,8 +22,13 @@ class PuzzleState(object):
         self.goal = goal
         self.cost_function = cost_function
 
+        for i, item in enumerate(self.config):
+            if item == 0:
+                self.blank_row = i // self.dimension
+                self.blank_col = i % self.dimension
+
     def display(self):
-        for i in range(DIMENSION):
+        for i in range(self.dimension):
             print(self.board[i])
 
     def move_left(self):
