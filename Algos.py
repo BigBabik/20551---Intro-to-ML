@@ -30,11 +30,27 @@ def bfs(start_state):
             if str(child.config) not in visited:
                 visited.add(str(child.config))
                 queue.append(child)
-                #child.parent = current_state  # Keep track of the path
 
     # If the loop ends without finding the goal
     print("Goal not found.")
     print(f"Number of nodes expanded: {nodes}")
 
-def dfs(state):
-    pass
+def iddfs(state, max_depth):
+    for depth in range(max_depth):
+        print(f"Searching at depth: {depth}")
+        final = dls(state, depth, 0)
+        if final:
+            return True
+    print("Goal not found.")
+    return False
+
+def dls(state, depth, expanded):
+    if depth == 0 and state.is_goal():
+        printer("IDDFS", state, expanded)
+        return True
+    if depth > 0:
+        for neighbor in state.expand():
+            expanded += 1
+            if dls(neighbor, depth - 1, expanded):
+                return True
+    return False
