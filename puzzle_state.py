@@ -1,7 +1,10 @@
-import time
-import resource
-import sys
-import math
+# Define moves as row, col offsets for each action
+MOVES = {
+    'Up': (-1, 0),
+    'Down': (1, 0),
+    'Left': (0, -1),
+    'Right': (0, 1)
+}
 
 class PuzzleState(object):
     """docstring for PuzzleState"""
@@ -122,6 +125,40 @@ class PuzzleState(object):
                     if child is not None:
                         self.children.append(child)
         return self.children
+
+    @staticmethod
+    def find_moved_tile(current_state):
+
+        # Find the position of the blank tile
+        blank_index = current_state.config.index(0)
+
+        # Get the row, col offset for the given action
+        if current_state.action not in MOVES:
+            raise ValueError("Invalid action.")
+
+        row_offset, col_offset = MOVES[current_state.action]
+        target = blank_index + row_offset * current_state.dimension + col_offset
+
+        if 0 <= target < len(current_state.config):
+            return current_state.config[target]  # Return the tile that was moved
+        else:
+            return None  # Invalid move
+
+    def trace(self):
+        """
+        The function returns all tiles moved up to this state.
+        It can be done deterministically because each state has the attribute action that indicates what was
+        done to reach it, and only 1 or less tiles in each state can legally perform any given action.
+
+        :return: list of numbers, each number is a tile
+        """
+        ancestors = []
+        node = self
+        while node is not None and node.action != "Initial":
+            ancestors.append(PuzzleState.find_moved_tile(node))
+            node = node.parent  # Move up to the parent node
+        ancestors.reverse()
+        return ancestors
 
     def is_solvable(self):
         inversion = 0

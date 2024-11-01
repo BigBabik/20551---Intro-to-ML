@@ -29,16 +29,12 @@ def get_user_input():
 
 def main():
     #config = get_user_input()
-    config = [1, 4, 2, 3, 0, 5, 6, 7, 8]
+    config = [1, 4, 8, 3, 7, 5, 2, 6, 0]
 
     state = PuzzleState(dimension=DIMENSION, config_input=config, goal=list(range(9)), cost_function=None)
     state.display()
 
-    end = Algos.bfs(state)
-    tmp = end
-    while tmp.parent is not None:
-        tmp.display()
-        tmp = tmp.parent
+    Algos.bfs(state)
 
 if __name__ == '__main__':
     main()
