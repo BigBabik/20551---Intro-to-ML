@@ -6,7 +6,7 @@ import math
 class PuzzleState(object):
     """docstring for PuzzleState"""
 
-    def __init__(self, dimension: int, config_input: list, goal, cost_function, parent=None, action="Initial", cost=0):
+    def __init__(self, dimension: int, config_input: list, goal: list, cost_function, parent=None, action="Initial", cost=0):
         """
         initialize the board state for the puzzle
 
@@ -60,7 +60,7 @@ class PuzzleState(object):
 
     def move_left(self):
         """
-        Given the state of the current board, move the one step left.
+        Given the state of the current board, move the one step right.
         This is equivalent to trying to pick the tile that can move left and doing so, if there is one.
 
         :return: A new PuzzleState instance, that has moved the "left free" tile one step to the left.
@@ -68,44 +68,44 @@ class PuzzleState(object):
         if self.blank_col == 0:
             return None
         else:
-            blank_index = self.blank_row * self.n + self.blank_col
+            blank_index = self.blank_row * self.dimension + self.blank_col
             target = blank_index - 1
             new_config = list(self.config)
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
-            return PuzzleState(tuple(new_config), self.n, self.goal, self.cost_function, parent=self, action="Left",
+            return PuzzleState(self.dimension, new_config, self.goal, self.cost_function, parent=self, action="Left",
                                cost=self.cost + 1)
 
     def move_right(self):
-        if self.blank_col == self.n - 1:
+        if self.blank_col == self.dimension - 1:
             return None
         else:
-            blank_index = self.blank_row * self.n + self.blank_col
+            blank_index = self.blank_row * self.dimension + self.blank_col
             target = blank_index + 1
             new_config = list(self.config)
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
-            return PuzzleState(tuple(new_config), self.n, self.goal, self.cost_function, parent=self, action="Right",
+            return PuzzleState(self.dimension, new_config, self.goal, self.cost_function, parent=self, action="Right",
                                cost=self.cost + 1)
 
     def move_up(self):
         if self.blank_row == 0:
             return None
         else:
-            blank_index = self.blank_row * self.n + self.blank_col
-            target = blank_index - self.n
+            blank_index = self.blank_row * self.dimension + self.blank_col
+            target = blank_index - self.dimension
             new_config = list(self.config)
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
-            return PuzzleState(tuple(new_config), self.n, self.goal, self.cost_function, parent=self, action="Up",
+            return PuzzleState(self.dimension, new_config, self.goal, self.cost_function, parent=self, action="Up",
                                cost=self.cost + 1)
 
     def move_down(self):
-        if self.blank_row == self.n - 1:
+        if self.blank_row == self.dimension - 1:
             return None
         else:
-            blank_index = self.blank_row * self.n + self.blank_col
-            target = blank_index + self.n
+            blank_index = self.blank_row * self.dimension + self.blank_col
+            target = blank_index + self.dimension
             new_config = list(self.config)
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
-            return PuzzleState(tuple(new_config), self.n, self.goal, self.cost_function, parent=self, action="Down",
+            return PuzzleState(self.dimension, new_config, self.goal, self.cost_function, parent=self, action="Down",
                                cost=self.cost + 1)
 
     def expand(self, RLDU=True):
