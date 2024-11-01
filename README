@@ -1,0 +1,4 @@
+GBFS heuristic - Sum of all diffs of the tile from the expected value -
+                 elementwise subtraction of state and goal, absoluted and summed
+
+A* heuristic - Euclidian distance of each tile from it's square

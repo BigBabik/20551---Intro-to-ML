@@ -1,5 +1,6 @@
 from puzzle_state import PuzzleState
 import Algos
+import random
 
 DIMENSION = 3
 
@@ -27,15 +28,25 @@ def get_user_input():
             print(f"Invalid input: {e}. Please try again.")
 
 
-def main():
-    #config = get_user_input()
-    config = [1, 4, 2, 3, 0, 5, 6, 7, 8]
-
+def run_algos(config: list):
     state = PuzzleState(dimension=DIMENSION, config_input=config, goal=list(range(9)), cost_function=None)
     state.display()
 
     Algos.bfs(state)
-    Algos.iddfs(state, 20)
+    #Algos.iddfs(state, 10)
+    Algos.gbfs(state)
+    Algos.a_star(state)
+
+def main():
+    #config = get_user_input()
+    run_algos([1,4,2,3,0,5,6,7,8])
+
+    for i in range(10):
+        print("\n\n\n")
+        config = list(range(9))  # Create a list from 0 to 8
+        random.shuffle(config)  # Shuffle the list
+        run_algos(config)
+
 
 if __name__ == '__main__':
     main()

@@ -160,14 +160,6 @@ class PuzzleState(object):
         ancestors.reverse()
         return ancestors
 
-    def is_solvable(self):
-        inversion = 0
-        for i in range(len(self.config)):
-            for j in range(i + 1, len(self.config)):
-                if (self.config[i] > self.config[j]) and self.config[i] != 0 and self.config[j] != 0:
-                    inversion += 1
-        return inversion % 2 == 0
-
     def is_goal(self):
         return list(self.config) == self.goal
 
