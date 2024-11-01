@@ -1,3 +1,24 @@
+The program contains three main files
+    1. Algo.py - pythonic implementations of the algorithms in the excerise
+    2. Puzzle.py - for the 8-puzzle framework
+    3. Tiles.py - main file for calling algorithms and user input
+
+The primary data structure is PuzzleState - holds information about a given puzzle state
+        - board: 2D list representation of the board state
+        - config: stores the flat initial configuration
+        - children: holds child nodes generated from this node
+        - blank_row: row index of the blank tile
+        - blank_col: column index of the blank tile
+        - goal: stores the goal configuration
+        - cost_function: function for calculating node cost
+
+The representation chosen for a State (and thus for the state space) is a list
+of integers that are the elements on the tile board.
+A transition between states is defined by the action that is taken, and the new state
+is the result of that function. As a pose to the textbook, a move is defined
+by the direction in which a non zero tile is moved, and not by the direction the
+blank is moved to (these are always opposite). This is more intuitive in my opinion.
+
 GBFS heuristic - Sum of all diffs of the tile from the expected value -
                  elementwise subtraction of state and goal, absoluted and summed
 

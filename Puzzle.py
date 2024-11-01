@@ -162,9 +162,3 @@ class PuzzleState(object):
 
     def is_goal(self):
         return list(self.config) == self.goal
-
-    def __lt__(self, other):
-        return self.cost_function(self) < self.cost_function(other)
-
-    def __le__(self, other):
-        return self.cost_function(self) <= self.cost_function(other)

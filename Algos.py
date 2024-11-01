@@ -1,4 +1,4 @@
-from puzzle_state import PuzzleState
+from Puzzle import PuzzleState
 from collections import deque
 import math
 
@@ -106,17 +106,20 @@ def compute_astar_heuristic(state):
 
     return total_distance
 
+
 def a_star(state, expanded=0, calls=0):
     score = 888888  # bigger than any possible value of this heuristic
 
     if state.is_goal():
         printer("A*", state, expanded)
         return state  # Return the goal state to reconstruct the path if needed
+
+    # Check for maximum expansions or calls after evaluating the goal
     if expanded > 100000 or calls > 500:
         print("Max expanded exceeded or recursion depth")
         return None
 
-    state.expand()
+    state.expand()  # Expand the current state to generate children
     best_state = None
     best_score = score
 
@@ -127,5 +130,10 @@ def a_star(state, expanded=0, calls=0):
             best_state = child
             best_score = score
 
-    print("recursing to best state {}, {} nodes expanded, score is {}".format(best_state.config, expanded, best_score))
-    a_star(best_state, expanded, calls + 1)
+    # Only recurse if a best state was found
+    if best_state is not None:
+        print("Recursing to best state {}, {} nodes expanded, score is {}".format(best_state.config, expanded,
+                                                                                  best_score))
+        return a_star(best_state, expanded, calls + 1)  # Return the result of the recursive call
+
+    return None  # If no best state found, return None

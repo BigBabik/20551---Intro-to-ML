@@ -1,4 +1,4 @@
-from puzzle_state import PuzzleState
+from Puzzle import PuzzleState
 import Algos
 import random
 
