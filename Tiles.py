@@ -1,11 +1,7 @@
-from distutils.command.config import config
-
-import puzzle_state
 from puzzle_state import PuzzleState
-
+import Algos
 
 DIMENSION = 3
-
 
 def get_user_input():
     """
@@ -38,25 +34,11 @@ def main():
     state = PuzzleState(dimension=DIMENSION, config_input=config, goal=list(range(9)), cost_function=None)
     state.display()
 
-    # test movement
-    left = state.move_left()
-    right = state.move_right()
-    up = state.move_up()
-    down = state.move_down()
-
-    print("\nDisplaying left:")
-    left.display()
-
-    print("\nDisplaying right:")
-    right.display()
-
-    print("\nDisplaying down:")
-    down.display()
-
-    print("\nDisplaying up:")
-    up.display()
-
-
+    end = Algos.bfs(state)
+    tmp = end
+    while tmp.parent is not None:
+        tmp.display()
+        tmp = tmp.parent
 
 if __name__ == '__main__':
     main()

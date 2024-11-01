@@ -91,7 +91,7 @@ class PuzzleState(object):
             return None
         else:
             blank_index = self.blank_row * self.dimension + self.blank_col
-            target = blank_index + self.dimension
+            target = blank_index + self.dimension # this is needed for the print of the resulting path
             new_config = list(self.config)
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(self.dimension, new_config, self.goal, self.cost_function, parent=self, action="Up",
