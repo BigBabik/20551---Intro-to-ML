@@ -60,22 +60,11 @@ class PuzzleState(object):
 
     def move_left(self):
         """
-        Given the state of the current board, move the one step right.
-        This is equivalent to trying to pick the tile that can move left and doing so, if there is one.
+        Given the state of the current board, move the one step left.
+        This is equivalent to trying to pick the only tile that can move left and doing so, if there is one.
 
         :return: A new PuzzleState instance, that has moved the "left free" tile one step to the left.
         """
-        if self.blank_col == 0:
-            return None
-        else:
-            blank_index = self.blank_row * self.dimension + self.blank_col
-            target = blank_index - 1
-            new_config = list(self.config)
-            new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
-            return PuzzleState(self.dimension, new_config, self.goal, self.cost_function, parent=self, action="Left",
-                               cost=self.cost + 1)
-
-    def move_right(self):
         if self.blank_col == self.dimension - 1:
             return None
         else:
@@ -83,26 +72,37 @@ class PuzzleState(object):
             target = blank_index + 1
             new_config = list(self.config)
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
+            return PuzzleState(self.dimension, new_config, self.goal, self.cost_function, parent=self, action="Left",
+                               cost=self.cost + 1)
+
+    def move_right(self):
+        if self.blank_col == 0:
+            return None
+        else:
+            blank_index = self.blank_row * self.dimension + self.blank_col
+            target = blank_index - 1
+            new_config = list(self.config)
+            new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(self.dimension, new_config, self.goal, self.cost_function, parent=self, action="Right",
                                cost=self.cost + 1)
 
     def move_up(self):
-        if self.blank_row == 0:
+        if self.blank_row == self.dimension - 1:
             return None
         else:
             blank_index = self.blank_row * self.dimension + self.blank_col
-            target = blank_index - self.dimension
+            target = blank_index + self.dimension
             new_config = list(self.config)
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(self.dimension, new_config, self.goal, self.cost_function, parent=self, action="Up",
                                cost=self.cost + 1)
 
     def move_down(self):
-        if self.blank_row == self.dimension - 1:
+        if self.blank_row == 0:
             return None
         else:
             blank_index = self.blank_row * self.dimension + self.blank_col
-            target = blank_index + self.dimension
+            target = blank_index - self.dimension
             new_config = list(self.config)
             new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
             return PuzzleState(self.dimension, new_config, self.goal, self.cost_function, parent=self, action="Down",

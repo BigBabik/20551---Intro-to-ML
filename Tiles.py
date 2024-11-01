@@ -33,7 +33,7 @@ def get_user_input():
 
 def main():
     #config = get_user_input()
-    config = [1, 0, 2, 3, 4, 5, 6, 7, 8]
+    config = [1, 4, 2, 3, 0, 5, 6, 7, 8]
 
     state = PuzzleState(dimension=DIMENSION, config_input=config, goal=list(range(9)), cost_function=None)
     state.display()
@@ -49,7 +49,6 @@ def main():
 
     print("\nDisplaying right:")
     right.display()
-
 
     print("\nDisplaying down:")
     down.display()
