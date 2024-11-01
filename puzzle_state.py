@@ -112,31 +112,15 @@ class PuzzleState(object):
         """expand the node"""
         if len(self.children) == 0:
             if RLDU:  #RLDU
-                right_child = self.move_right()
-                if right_child is not None:
-                    self.children.append(right_child)
-                left_child = self.move_left()
-                if left_child is not None:
-                    self.children.append(left_child)
-                down_child = self.move_down()
-                if down_child is not None:
-                    self.children.append(down_child)
-                up_child = self.move_up()
-                if up_child is not None:
-                    self.children.append(up_child)
+                for move in [self.move_right, self.move_left, self.move_down, self.move_up]:
+                    child = move()
+                    if child is not None:
+                        self.children.append(child)
             else:  #UDLR
-                up_child = self.move_up()
-                if up_child is not None:
-                    self.children.append(up_child)
-                down_child = self.move_down()
-                if down_child is not None:
-                    self.children.append(down_child)
-                left_child = self.move_left()
-                if left_child is not None:
-                    self.children.append(left_child)
-                right_child = self.move_right()
-                if right_child is not None:
-                    self.children.append(right_child)
+                for move in [self.move_up, self.move_down, self.move_left, self.move_right]:
+                    child = move()
+                    if child is not None:
+                        self.children.append(child)
         return self.children
 
     def is_solvable(self):
