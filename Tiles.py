@@ -32,7 +32,9 @@ def run_algos(config: list):
     state = PuzzleState(dimension=DIMENSION, config_input=config, goal=list(range(9)), cost_function=None)
     state.display()
 
-    Algos.bfs(state)
+    b = Algos.bfs(state)
+    if b is None:
+        return None
     #Algos.iddfs(state, 10)
     Algos.gbfs(state)
     Algos.a_star(state)

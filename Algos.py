@@ -78,7 +78,19 @@ def gbfs(start_tate, expanded=0, calls=0):
             best_state = child
             best_score = score
 
+    #print("recursing to best state {}, {} nodes expanded, score is {}".format(best_state.config, expanded, best_score))
     gbfs(best_state, expanded, calls + 1)
+
+def manhattan_distance(state):
+    total_distance = 0
+    size = int(math.sqrt(len(state.config)))  # Assuming square grid
+    for index, tile in enumerate(state.config):
+        if tile != 0:  # Ignore the empty tile
+            target_x, target_y = divmod(tile - 1, size)
+            current_x, current_y = divmod(index, size)
+            total_distance += abs(current_x - target_x) + abs(current_y - target_y)
+    return total_distance
+
 
 def compute_astar_heuristic(state):
     total_distance = 0
@@ -110,7 +122,7 @@ def a_star(state, expanded=0, calls=0):
 
     for child in state.children:
         expanded += 1
-        score = child.cost + compute_astar_heuristic(child)
+        score = child.cost + manhattan_distance(child)
         if score < best_score:
             best_state = child
             best_score = score
