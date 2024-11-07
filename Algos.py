@@ -35,24 +35,26 @@ def bfs(start_state):
     print(f"Goal not found. Number of nodes expanded: {nodes}")
 
 def iddfs(state, max_depth):
+    expanded_count = 0
     for depth in range(max_depth):
         print(f"Searching at depth: {depth}")
-        final = dls(state, depth, 0)
+        final, expanded_count = dls(state, depth, expanded_count)
         if final:
             return True
     print("Goal not found.")
     return False
 
-def dls(state, depth, expanded):
+def dls(state, depth, expanded_count):
     if depth == 0 and state.is_goal():
-        printer("IDDFS", state, expanded)
-        return True
+        printer("IDDFS", state, expanded_count)
+        return True, expanded_count
     if depth > 0:
         for neighbor in state.expand():
-            expanded += 1
-            if dls(neighbor, depth - 1, expanded):
-                return True
-    return False
+            expanded_count += 1
+            res, expanded_count = dls(neighbor, depth - 1, expanded_count)
+            if res:
+                return True, expanded_count
+    return False, expanded_count
 
 def compute_gbfs_heuristic(state):
     return sum([abs(item - i) for item, i in enumerate(state.config)])

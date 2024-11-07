@@ -23,3 +23,17 @@ GBFS heuristic - Sum of all diffs of the tile from the expected value -
                  elementwise subtraction of state and goal, absoluted and summed
 
 A* heuristic - Euclidian distance of each tile from it's square
+
+
+As to the optimality of each algorithm
+1. BFS -
+2. IDDFS -
+3. GBFS -
+4. A* -
+
+The program is ran as follows -
+Tiles.py contains the main function and prompts for input.
+It creates a Puzzle configuration instance and passes it on to a wrapper
+function that calls each algorithm implementation.
+
+Screenshots of the run output will be added to this folder

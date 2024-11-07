@@ -1,2 +1,5 @@
 - unify move functions into one function
 - cut out board attr and just generate it in the display method
+
+
+for each dataset,

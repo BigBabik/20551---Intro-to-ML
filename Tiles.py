@@ -35,19 +35,19 @@ def run_algos(config: list):
     b = Algos.bfs(state)
     if b is None:
         return None
-    #Algos.iddfs(state, 10)
+    #Algos.iddfs(state, 15)
     Algos.gbfs(state)
-    Algos.a_star(state)
+    #Algos.a_star(state)
 
 def main():
     #config = get_user_input()
-    run_algos([1,4,2,3,0,5,6,7,8])
+    run_algos([1,4,0,5,8,2,3,6,7])
 
     for i in range(10):
         print("\n\n\n")
         config = list(range(9))  # Create a list from 0 to 8
         random.shuffle(config)  # Shuffle the list
-        run_algos(config)
+        #run_algos(config)
 
 
 if __name__ == '__main__':
