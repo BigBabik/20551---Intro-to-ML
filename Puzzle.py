@@ -46,7 +46,6 @@ class PuzzleState(object):
         self.cost = cost
         self.parent = parent
         self.action = action
-        self.dimension = 3
         self.config = config_input
         self.children = []
         self.goal = goal
@@ -162,3 +161,6 @@ class PuzzleState(object):
 
     def is_goal(self):
         return list(self.config) == self.goal
+
+    def __lt__(self, other):
+        return self.cost < other.cost

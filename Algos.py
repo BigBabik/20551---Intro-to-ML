@@ -1,5 +1,6 @@
 from Puzzle import PuzzleState
 from collections import deque
+import heapq
 import math
 
 def printer(algo, state, nodes):
@@ -45,7 +46,8 @@ def iddfs(state, max_depth):
     return False
 
 def dls(state, depth, expanded_count):
-    if depth == 0 and state.is_goal():
+    if depth == 0 and state.is_goal(): # why do I check that depth is 0?
+                                        # I shouldn't be able to reach a goal in any other depth but stil
         printer("IDDFS", state, expanded_count)
         return True, expanded_count
     if depth > 0:
@@ -59,29 +61,43 @@ def dls(state, depth, expanded_count):
 def compute_gbfs_heuristic(state):
     return sum([abs(item - i) for item, i in enumerate(state.config)])
 
-def gbfs(start_tate, expanded=0, calls=0):
-    score = 888888 # bigger than any possible value of this heuristic
+def gbfs(start_tate, expanded_count=0, calls=0):
+    print("Starting GBFS")
+    node = start_tate
+    frontier = []
 
-    if start_tate.is_goal():
-        printer("GBFS", start_tate, expanded)
-        return start_tate  # Return the goal state to reconstruct the path if needed
-    if expanded > 100000 or calls > 500:
-        print("Max expanded exceeded or recursion depth")
-        return None
+    node.cost = compute_gbfs_heuristic(node)
+    heapq.heappush(frontier, node)
+    reached = set()
 
-    start_tate.expand()
-    best_state = start_tate.children[0]
-    best_score = compute_gbfs_heuristic(best_state)
+    while frontier: # maybe need another term
+        calls += 1
+        node = heapq.heappop(frontier)
+        print(f"[-] Popped is {node.config}")
+        if node.is_goal():
+            printer("GBFS", node, expanded_count)
+            return node, expanded_count
 
-    for child in start_tate.children:
-        expanded += 1
-        score = compute_gbfs_heuristic(child)
-        if score < best_score:
-            best_state = child
-            best_score = score
+        reached.add(str(node.config))
 
-    #print("recursing to best state {}, {} nodes expanded, score is {}".format(best_state.config, expanded, best_score))
-    gbfs(best_state, expanded, calls + 1)
+        for child in node.expand():
+            print(f"[-] Child is {child.config}")
+            expanded_count += 1
+            if str(child.config) not in reached:
+                try:
+                    child.cost = compute_gbfs_heuristic(child)
+                    heapq.heappush(frontier, child)
+
+                    print(f"[*] Pushed {compute_gbfs_heuristic(child)}, {child.config}")
+                    reached.add(str(child.config))  # Mark each child as reached
+                except:
+                    print(f"Crashing on {compute_gbfs_heuristic(child)}, {child.config}")
+
+    # If no solution is found
+    print("Goal not found.")
+    print(f"Total states expanded: {expanded_count}")
+    print(f"Total loop calls: {calls}")
+    return None, expanded_count
 
 def manhattan_distance(state):
     total_distance = 0
