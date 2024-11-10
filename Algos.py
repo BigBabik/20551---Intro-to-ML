@@ -3,12 +3,13 @@ from collections import deque
 import heapq
 import math
 
-def printer(algo, state, nodes):
-    print(f"\n{algo}\nTotal of {nodes} states expanded.\nPath to goal:")
+def printer(state, nodes):
+    print(f"Total of {nodes} states expanded.\nPath to goal:")
     print(state.trace())
 
 
 def bfs(start_state):
+    print("\nBFS")
     nodes = 0
 
     # Initialize the queue with the start state
@@ -23,7 +24,7 @@ def bfs(start_state):
 
         # Check if the goal has been reached
         if current_state.is_goal():
-            printer("BFS", current_state, nodes)
+            printer(current_state, nodes)
             return current_state  # Return the goal state to reconstruct the path if needed
 
         # Generate children and add unvisited ones to the queue
@@ -36,6 +37,7 @@ def bfs(start_state):
     print(f"Goal not found. Number of nodes expanded: {nodes}")
 
 def iddfs(state, max_depth):
+    print("\nIDDFS")
     expanded_count = 0
     for depth in range(max_depth):
         print(f"Searching at depth: {depth}")
@@ -48,7 +50,7 @@ def iddfs(state, max_depth):
 def dls(state, depth, expanded_count):
     if depth == 0 and state.is_goal(): # why do I check that depth is 0?
                                         # I shouldn't be able to reach a goal in any other depth but stil
-        printer("IDDFS", state, expanded_count)
+        printer(state, expanded_count)
         return True, expanded_count
     if depth > 0:
         for neighbor in state.expand():
@@ -62,7 +64,7 @@ def compute_gbfs_heuristic(state):
     return sum([abs(item - i) for item, i in enumerate(state.config)])
 
 def gbfs(start_tate, expanded_count=0, calls=0):
-    print("Starting GBFS")
+    print("\nGBFS")
     node = start_tate
     frontier = []
 
@@ -73,25 +75,23 @@ def gbfs(start_tate, expanded_count=0, calls=0):
     while frontier: # maybe need another term
         calls += 1
         node = heapq.heappop(frontier)
-        print(f"[-] Popped is {node.config}")
+        #print(f"[-] Popped is {node.config}")
         if node.is_goal():
-            printer("GBFS", node, expanded_count)
+            printer(node, expanded_count)
             return node, expanded_count
 
         reached.add(str(node.config))
 
         for child in node.expand():
-            print(f"[-] Child is {child.config}")
+            #print(f"[-] Child is {child.config}")
             expanded_count += 1
             if str(child.config) not in reached:
-                try:
-                    child.cost = compute_gbfs_heuristic(child)
-                    heapq.heappush(frontier, child)
+                child.cost = compute_gbfs_heuristic(child)
+                heapq.heappush(frontier, child)
 
-                    print(f"[*] Pushed {compute_gbfs_heuristic(child)}, {child.config}")
-                    reached.add(str(child.config))  # Mark each child as reached
-                except:
-                    print(f"Crashing on {compute_gbfs_heuristic(child)}, {child.config}")
+                reached.add(str(child.config))  # Mark each child as reached
+                #print(f"[*] Pushed {compute_gbfs_heuristic(child)}, {child.config}")
+
 
     # If no solution is found
     print("Goal not found.")

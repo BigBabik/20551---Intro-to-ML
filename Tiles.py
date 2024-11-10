@@ -47,7 +47,7 @@ def main():
         print("\n\n\n")
         config = list(range(9))  # Create a list from 0 to 8
         random.shuffle(config)  # Shuffle the list
-        #run_algos(config)
+        run_algos(config)
 
 
 if __name__ == '__main__':
