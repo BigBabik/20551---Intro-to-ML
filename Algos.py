@@ -63,9 +63,9 @@ def dls(state, depth, expanded_count):
 def compute_gbfs_heuristic(state):
     return sum([abs(item - i) for item, i in enumerate(state.config)])
 
-def gbfs(start_tate, expanded_count=0, calls=0):
+def gbfs(start_state, expanded_count=0, calls=0):
     print("\nGBFS")
-    node = start_tate
+    node = start_state
     frontier = []
 
     node.cost = compute_gbfs_heuristic(node)
@@ -101,7 +101,7 @@ def gbfs(start_tate, expanded_count=0, calls=0):
 
 def manhattan_distance(state):
     total_distance = 0
-    size = int(math.sqrt(len(state.config)))  # Assuming square grid
+    size = state.dimension
     for index, tile in enumerate(state.config):
         if tile != 0:  # Ignore the empty tile
             target_x, target_y = divmod(tile - 1, size)
@@ -109,8 +109,9 @@ def manhattan_distance(state):
             total_distance += abs(current_x - target_x) + abs(current_y - target_y)
     return total_distance
 
+def compute_astar_heuristic(state, distance_to):
 
-def compute_astar_heuristic(state):
+    #return distance_to + manhattan_distance(state)
     total_distance = 0
 
     for index, tile in enumerate(state.config):
@@ -122,36 +123,39 @@ def compute_astar_heuristic(state):
         distance = math.sqrt((current_x - target_x) ** 2 + (current_y - target_y) ** 2)
         total_distance += distance
 
-    return total_distance
+    return distance_to + total_distance
 
+def a_star(start_state, expanded_count=0, calls=0):
+    print("\nA*")
+    node = start_state
+    frontier = []
+    actual = 0
 
-def a_star(state, expanded=0, calls=0):
-    score = 888888  # bigger than any possible value of this heuristic
+    node.cost = compute_astar_heuristic(node, actual)
+    heapq.heappush(frontier, node)
+    reached = set()
 
-    if state.is_goal():
-        printer("A*", state, expanded)
-        return state  # Return the goal state to reconstruct the path if needed
+    while frontier: # maybe need another term
+        calls += 1
+        node = heapq.heappop(frontier)
+        if node.is_goal():
+            printer(node, expanded_count)
+            return node, expanded_count
+        else:
+            actual += 1 # definitely needs to take another action so g(n) gets increased
 
-    # Check for maximum expansions or calls after evaluating the goal
-    if expanded > 100000 or calls > 500:
-        print("Max expanded exceeded or recursion depth")
-        return None
+        reached.add(str(node.config))
 
-    state.expand()  # Expand the current state to generate children
-    best_state = None
-    best_score = score
+        for child in node.expand():
+            expanded_count += 1
+            if str(child.config) not in reached:
+                child.cost = compute_astar_heuristic(node, actual)
+                heapq.heappush(frontier, child)
 
-    for child in state.children:
-        expanded += 1
-        score = child.cost + manhattan_distance(child)
-        if score < best_score:
-            best_state = child
-            best_score = score
+                reached.add(str(child.config))  # Mark each child as reached
+                #print(f"[*] Pushed {compute_gbfs_heuristic(child)}, {child.config}")
 
-    # Only recurse if a best state was found
-    if best_state is not None:
-        print("Recursing to best state {}, {} nodes expanded, score is {}".format(best_state.config, expanded,
-                                                                                  best_score))
-        return a_star(best_state, expanded, calls + 1)  # Return the result of the recursive call
+    # If no solution is found
+    print(f"Goal not found in A*. Total states expanded: {expanded_count}. Total loop calls: {calls}")
+    return None, expanded_count
 
-    return None  # If no best state found, return None
