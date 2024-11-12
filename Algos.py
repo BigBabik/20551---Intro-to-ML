@@ -27,11 +27,13 @@ def bfs(start_state):
             return current_state  # Return the goal state to reconstruct the path if needed
 
         # Generate children and add unvisited ones to the queue
-        for child in current_state.expand():
+        expansion = current_state.expand()
+        nodes += 1
+        for child in expansion:
             if str(child.config) not in visited:
                 visited.add(str(child.config))
                 queue.append(child)
-        nodes += 1
+
 
     # If the loop ends without finding the goal
     print(f"Goal not found in IDDFS. Total states expanded: {nodes}.")
@@ -54,9 +56,10 @@ def dfs(state, depth, expanded_count):
         printer(state, expanded_count)
         return True, expanded_count
     if depth > 0:
-        for neighbor in state.expand(RLDU=False):
+        expansion = state.expand()
+        expanded_count += 1
+        for neighbor in expansion:
             res, expanded_count = dfs(neighbor, depth - 1, expanded_count)
-            expanded_count += 1
             if res:
                 return True, expanded_count
     return False, expanded_count
