@@ -1,7 +1,9 @@
 The program contains three main files
     1. Algo.py - pythonic implementations of the algorithms in the excerise
     2. Puzzle.py - for the 8-puzzle framework
-    3. Tiles.py - main file for calling algorithms and user input
+    3. Tiles.py - main file for calling algorithms and user input.
+
+Run "python3 Tiles.py" for execution, you will be prompted for an input.
 
 The primary data structure is PuzzleState - holds information about a given puzzle state
         - board: 2D list representation of the board state

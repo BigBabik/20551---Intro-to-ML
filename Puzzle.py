@@ -145,12 +145,12 @@ class PuzzleState(object):
         :return: A list of child nodes created by applying each valid move to the current node.
         """
         if len(self.children) == 0:
-            if RLDU:  #RLDU
+            if RLDU:  # Right -> Left -> Down -> Up
                 for move in [self.move_right, self.move_left, self.move_down, self.move_up]:
                     child = move()
                     if child is not None:
                         self.children.append(child)
-            else:  #UDLR
+            else:  # Up -> Down -> Left -> Right
                 for move in [self.move_up, self.move_down, self.move_left, self.move_right]:
                     child = move()
                     if child is not None:
