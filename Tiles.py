@@ -29,7 +29,7 @@ def get_user_input():
 
 
 def run_algos(config: list):
-    state = PuzzleState(dimension=DIMENSION, config_input=config, goal=list(range(9)), cost_function=None)
+    state = PuzzleState(dimension=DIMENSION, config_input=config, goal=list(range(9)))
     state.display()
 
     b = Algos.bfs(state)

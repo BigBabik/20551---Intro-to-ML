@@ -1,10 +1,11 @@
 # Define moves as row, col offsets for each action
-MOVES = {
+LEGAL_MOVES = {
     'Up': (-1, 0),
     'Down': (1, 0),
     'Left': (0, -1),
     'Right': (0, 1)
 }
+
 
 class PuzzleState(object):
     """docstring for PuzzleState"""
@@ -36,6 +37,7 @@ class PuzzleState(object):
         - config: The flat list representation of the board, used to determine tile positions.
         - children: A list to store child nodes generated from this board state.
         - goal: The target configuration for the puzzle. In our case will usually be [0,1,2,3,4,5,6,7,8]
+        - movement: a movement map for calculating target indices. Is based on the dimension parameter.
         - blank_row and blank_col: The current row and column positions of the blank tile (0).
 
         Example:
@@ -57,11 +59,13 @@ class PuzzleState(object):
         self.config = config_input
         self.children = []
         self.goal = goal    # what is the goal state of this game. Will always be the same in our case but was used for testing.
+        self.movement = {'Up': self.dimension, 'Down': -self.dimension, 'Left': 1, 'Right': -1}
 
         for i, item in enumerate(self.config):  # calculate the row and col the blank is in, easier down the road
             if item == 0:
                 self.blank_row = i // self.dimension
                 self.blank_col = i % self.dimension
+
 
     def display(self):
         """
@@ -71,6 +75,15 @@ class PuzzleState(object):
         """
         for i in range(self.dimension):  # print the i'th row every time
             print(self.board[i])
+
+    def move(self, direction):
+        blank_index = self.blank_row * self.dimension + self.blank_col
+        target = blank_index + self.movement[direction]
+
+        new_config = list(self.config)
+        new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
+        return PuzzleState(self.dimension, new_config, self.goal, parent=self, action=direction,
+                           cost=self.cost + 1)
 
     def move_left(self):
         """
@@ -82,45 +95,25 @@ class PuzzleState(object):
         if self.blank_col == self.dimension - 1:
             return None
         else:
-            blank_index = self.blank_row * self.dimension + self.blank_col
-            target = blank_index + 1
-            new_config = list(self.config)
-            new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
-            return PuzzleState(self.dimension, new_config, self.goal, parent=self, action="Left",
-                               cost=self.cost + 1)
+            return self.move("Left")
 
     def move_right(self):
         if self.blank_col == 0:
             return None
         else:
-            blank_index = self.blank_row * self.dimension + self.blank_col
-            target = blank_index - 1
-            new_config = list(self.config)
-            new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
-            return PuzzleState(self.dimension, new_config, self.goal, parent=self, action="Right",
-                               cost=self.cost + 1)
+            return self.move("Right")
 
     def move_up(self):
         if self.blank_row == self.dimension - 1:
             return None
         else:
-            blank_index = self.blank_row * self.dimension + self.blank_col
-            target = blank_index + self.dimension # this is needed for the print of the resulting path
-            new_config = list(self.config)
-            new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
-            return PuzzleState(self.dimension, new_config, self.goal, parent=self, action="Up",
-                               cost=self.cost + 1)
+            return self.move("Up")
 
     def move_down(self):
         if self.blank_row == 0:
             return None
         else:
-            blank_index = self.blank_row * self.dimension + self.blank_col
-            target = blank_index - self.dimension
-            new_config = list(self.config)
-            new_config[blank_index], new_config[target] = new_config[target], new_config[blank_index]
-            return PuzzleState(self.dimension, new_config, self.goal, parent=self, action="Down",
-                               cost=self.cost + 1)
+            return self.move("Down")
 
     def expand(self, RLDU=True):
         """
@@ -157,10 +150,10 @@ class PuzzleState(object):
         blank_index = current_state.config.index(0)
 
         # Get the row, col offset for the given action
-        if current_state.action not in MOVES:
+        if current_state.action not in LEGAL_MOVES:
             raise ValueError("Invalid action.")
 
-        row_offset, col_offset = MOVES[current_state.action]
+        row_offset, col_offset = LEGAL_MOVES[current_state.action]
         target = blank_index + row_offset * current_state.dimension + col_offset
 
         if 0 <= target < len(current_state.config):
