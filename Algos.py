@@ -10,7 +10,7 @@ def printer(state, nodes):
 
 def bfs(start_state):
     print("\nBFS")
-    nodes = 0
+    expanded_counter = 0
 
     # Initialize the queue with the start state
     queue = deque([start_state])
@@ -23,51 +23,50 @@ def bfs(start_state):
 
         # Check if the goal has been reached
         if current_state.is_goal():
-            printer(current_state, nodes)
+            printer(current_state, expanded_counter)
             return current_state  # Return the goal state to reconstruct the path if needed
 
         # Generate children and add unvisited ones to the queue
-        expansion = current_state.expand()
-        nodes += 1
-        for child in expansion:
+
+        expanded_counter += 1
+        for child in current_state.expand():
             if str(child.config) not in visited:
                 visited.add(str(child.config))
                 queue.append(child)
 
 
     # If the loop ends without finding the goal
-    print(f"Goal not found in IDDFS. Total states expanded: {nodes}.")
+    print(f"Goal not found in IDDFS. Total states expanded: {expanded_counter}.")
 
 def iddfs(state, max_depth):
     print("\nIDDFS")
-    expanded_count = 0
+    expanded_counter = 0
     for depth in range(max_depth):
         # print(f"Searching at depth: {depth}")
-        final, expanded_count = dfs(state, depth, expanded_count)
+        final, expanded_counter = dfs(state, depth, expanded_counter)
         if final:
             return True
-    print(f"Goal not found in IDDFS. Total states expanded: {expanded_count}.")
+    print(f"Goal not found in IDDFS. Total states expanded: {expanded_counter}.")
 
     return False
 
-def dfs(state, depth, expanded_count):
+def dfs(state, depth, expanded_counter):
     if depth == 0 and state.is_goal(): # why do I check that depth is 0?
                                         # I shouldn't be able to reach a goal in any other depth but stil
-        printer(state, expanded_count)
-        return True, expanded_count
+        printer(state, expanded_counter)
+        return True, expanded_counter
     if depth > 0:
-        expansion = state.expand()
-        expanded_count += 1
-        for neighbor in expansion:
-            res, expanded_count = dfs(neighbor, depth - 1, expanded_count)
+        expanded_counter += 1
+        for neighbor in state.expand():
+            res, expanded_counter = dfs(neighbor, depth - 1, expanded_counter)
             if res:
-                return True, expanded_count
-    return False, expanded_count
+                return True, expanded_counter
+    return False, expanded_counter
 
 def compute_gbfs_heuristic(state):
     return sum([abs(item - i) for item, i in enumerate(state.config)])
 
-def gbfs(start_state, expanded_count=0):
+def gbfs(start_state, expanded_counter=0):
     print("\nGBFS")
     node = start_state
     frontier = []
@@ -79,13 +78,13 @@ def gbfs(start_state, expanded_count=0):
     while frontier: # maybe need another term
         node = heapq.heappop(frontier)
         if node.is_goal():
-            printer(node, expanded_count)
-            return node, expanded_count
+            printer(node, expanded_counter)
+            return node, expanded_counter
 
         reached.add(str(node.config))
 
+        expanded_counter += 1
         for child in node.expand():
-            expanded_count += 1
             if str(child.config) not in reached:
                 child.cost = compute_gbfs_heuristic(child)
                 heapq.heappush(frontier, child)
@@ -94,8 +93,8 @@ def gbfs(start_state, expanded_count=0):
 
 
     # If no solution is found
-    print(f"Goal not found in GBFS. Total states expanded: {expanded_count}. Total loop calls: {calls}")
-    return None, expanded_count
+    print(f"Goal not found in GBFS. Total states expanded: {expanded_counter}.")
+    return None, expanded_counter
 
 def manhattan_distance(state):
     total_distance = 0
@@ -123,7 +122,7 @@ def compute_astar_heuristic(state, distance_to):
 
     return distance_to + total_distance
 
-def a_star(start_state, expanded_count=0):
+def a_star(start_state, expanded_counter=0):
     print("\nA*")
     node = start_state
     frontier = []
@@ -136,15 +135,15 @@ def a_star(start_state, expanded_count=0):
     while frontier: # maybe need another term
         node = heapq.heappop(frontier)
         if node.is_goal():
-            printer(node, expanded_count)
-            return node, expanded_count
+            printer(node, expanded_counter)
+            return node, expanded_counter
         else:
             actual += 1 # definitely needs to take another action so g(n) gets increased
 
         reached.add(str(node.config))
 
+        expanded_counter += 1
         for child in node.expand():
-            expanded_count += 1
             if str(child.config) not in reached:
                 child.cost = compute_astar_heuristic(node, actual)
                 heapq.heappush(frontier, child)
@@ -152,6 +151,6 @@ def a_star(start_state, expanded_count=0):
                 reached.add(str(child.config))  # Mark each child as reached
 
     # If no solution is found
-    print(f"Goal not found in A*. Total states expanded: {expanded_count}. Total loop calls: {calls}")
-    return None, expanded_count
+    print(f"Goal not found in A*. Total states expanded: {expanded_counter}.")
+    return None, expanded_counter
 
