@@ -67,7 +67,7 @@ def dfs(state, depth, expanded_count):
 def compute_gbfs_heuristic(state):
     return sum([abs(item - i) for item, i in enumerate(state.config)])
 
-def gbfs(start_state, expanded_count=0, calls=0):
+def gbfs(start_state, expanded_count=0):
     print("\nGBFS")
     node = start_state
     frontier = []
@@ -77,7 +77,6 @@ def gbfs(start_state, expanded_count=0, calls=0):
     reached = set()
 
     while frontier: # maybe need another term
-        calls += 1
         node = heapq.heappop(frontier)
         if node.is_goal():
             printer(node, expanded_count)
@@ -124,7 +123,7 @@ def compute_astar_heuristic(state, distance_to):
 
     return distance_to + total_distance
 
-def a_star(start_state, expanded_count=0, calls=0):
+def a_star(start_state, expanded_count=0):
     print("\nA*")
     node = start_state
     frontier = []
@@ -135,7 +134,6 @@ def a_star(start_state, expanded_count=0, calls=0):
     reached = set()
 
     while frontier: # maybe need another term
-        calls += 1
         node = heapq.heappop(frontier)
         if node.is_goal():
             printer(node, expanded_count)
