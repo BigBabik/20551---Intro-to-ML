@@ -34,17 +34,18 @@ def bfs(start_state):
                 queue.append(child)
 
     # If the loop ends without finding the goal
-    print(f"Goal not found. Number of nodes expanded: {nodes}")
+    print(f"Goal not found in IDDFS. Total states expanded: {nodes}.")
 
 def iddfs(state, max_depth):
     print("\nIDDFS")
     expanded_count = 0
     for depth in range(max_depth):
-        print(f"Searching at depth: {depth}")
+        # print(f"Searching at depth: {depth}")
         final, expanded_count = dls(state, depth, expanded_count)
         if final:
             return True
-    print("Goal not found.")
+    print(f"Goal not found in IDDFS. Total states expanded: {expanded_count}.")
+
     return False
 
 def dls(state, depth, expanded_count):
@@ -75,7 +76,6 @@ def gbfs(start_state, expanded_count=0, calls=0):
     while frontier: # maybe need another term
         calls += 1
         node = heapq.heappop(frontier)
-        #print(f"[-] Popped is {node.config}")
         if node.is_goal():
             printer(node, expanded_count)
             return node, expanded_count
@@ -83,20 +83,16 @@ def gbfs(start_state, expanded_count=0, calls=0):
         reached.add(str(node.config))
 
         for child in node.expand():
-            #print(f"[-] Child is {child.config}")
             expanded_count += 1
             if str(child.config) not in reached:
                 child.cost = compute_gbfs_heuristic(child)
                 heapq.heappush(frontier, child)
 
                 reached.add(str(child.config))  # Mark each child as reached
-                #print(f"[*] Pushed {compute_gbfs_heuristic(child)}, {child.config}")
 
 
     # If no solution is found
-    print("Goal not found.")
-    print(f"Total states expanded: {expanded_count}")
-    print(f"Total loop calls: {calls}")
+    print(f"Goal not found in GBFS. Total states expanded: {expanded_count}. Total loop calls: {calls}")
     return None, expanded_count
 
 def manhattan_distance(state):
@@ -153,7 +149,6 @@ def a_star(start_state, expanded_count=0, calls=0):
                 heapq.heappush(frontier, child)
 
                 reached.add(str(child.config))  # Mark each child as reached
-                #print(f"[*] Pushed {compute_gbfs_heuristic(child)}, {child.config}")
 
     # If no solution is found
     print(f"Goal not found in A*. Total states expanded: {expanded_count}. Total loop calls: {calls}")

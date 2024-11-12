@@ -35,7 +35,7 @@ def run_algos(config: list):
     b = Algos.bfs(state)
     if b is None:
         return None
-    #Algos.iddfs(state, 15)
+    Algos.iddfs(state, 15)
     Algos.gbfs(state)
     Algos.a_star(state)
 
@@ -43,11 +43,11 @@ def main():
     #config = get_user_input()
     run_algos([1,4,0,5,8,2,3,6,7])
 
-    for i in range(10):
+    for i in range(5):
         config = list(range(9))  # Create a list from 0 to 8
         random.shuffle(config)  # Shuffle the list
-        #print("\n\n\n")
-        #run_algos(config)
+        print("\n\n\n")
+        run_algos(config)
 
 
 if __name__ == '__main__':
