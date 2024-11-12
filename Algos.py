@@ -20,7 +20,6 @@ def bfs(start_state):
     while queue:
         # Pop the front of the queue
         current_state = queue.popleft()
-        nodes += 1
 
         # Check if the goal has been reached
         if current_state.is_goal():
@@ -32,6 +31,7 @@ def bfs(start_state):
             if str(child.config) not in visited:
                 visited.add(str(child.config))
                 queue.append(child)
+        nodes += 1
 
     # If the loop ends without finding the goal
     print(f"Goal not found in IDDFS. Total states expanded: {nodes}.")
@@ -41,22 +41,22 @@ def iddfs(state, max_depth):
     expanded_count = 0
     for depth in range(max_depth):
         # print(f"Searching at depth: {depth}")
-        final, expanded_count = dls(state, depth, expanded_count)
+        final, expanded_count = dfs(state, depth, expanded_count)
         if final:
             return True
     print(f"Goal not found in IDDFS. Total states expanded: {expanded_count}.")
 
     return False
 
-def dls(state, depth, expanded_count):
+def dfs(state, depth, expanded_count):
     if depth == 0 and state.is_goal(): # why do I check that depth is 0?
                                         # I shouldn't be able to reach a goal in any other depth but stil
         printer(state, expanded_count)
         return True, expanded_count
     if depth > 0:
-        for neighbor in state.expand():
+        for neighbor in state.expand(RLDU=False):
+            res, expanded_count = dfs(neighbor, depth - 1, expanded_count)
             expanded_count += 1
-            res, expanded_count = dls(neighbor, depth - 1, expanded_count)
             if res:
                 return True, expanded_count
     return False, expanded_count

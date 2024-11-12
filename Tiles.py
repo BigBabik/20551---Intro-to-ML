@@ -9,11 +9,7 @@ def get_user_input():
     prompts user to input the 8-tile game configuration,
     where each number (0-8) is separated by a single space
 
-    Returns:
-    - list of integers representing the board configuration
-
-    Raises:
-    - ValueError if input doesn't contain exactly 9 numbers from 0 to 8
+    :returns: list of integers representing the board configuration
     """
     while True:
         try:
@@ -35,7 +31,7 @@ def run_algos(config: list):
     b = Algos.bfs(state)
     if b is None:
         return None
-    Algos.iddfs(state, 15)
+    Algos.iddfs(state, 11)
     Algos.gbfs(state)
     Algos.a_star(state)
 
@@ -46,8 +42,8 @@ def main():
     for i in range(5):
         config = list(range(9))  # Create a list from 0 to 8
         random.shuffle(config)  # Shuffle the list
-        print("\n\n\n")
-        run_algos(config)
+        #print("\n\n\n")
+        #run_algos(config)
 
 
 if __name__ == '__main__':
