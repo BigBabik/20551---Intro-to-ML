@@ -30,21 +30,25 @@ def run_algos(config: list):
 
     b = Algos.bfs(state)
     if b is None:
+        print("Skipping config because goal not reached in BFS")
         return None
     Algos.iddfs(state, 11)
     Algos.gbfs(state)
     Algos.a_star(state)
 
-def main():
-    #config = get_user_input()
-    run_algos([1,4,0,5,8,2,3,6,7])
+def run_tests():
+    run_algos([1, 4, 0, 5, 8, 2, 3, 6, 7])
 
     for i in range(5):
         config = list(range(9))  # Create a list from 0 to 8
         random.shuffle(config)  # Shuffle the list
-        #print("\n\n\n")
-        #run_algos(config)
+        print("\n\n\n")
+        run_algos(config)
 
+def main():
+    config = get_user_input()
+    run_algos(config)
+    #run_tests()
 
 if __name__ == '__main__':
     main()

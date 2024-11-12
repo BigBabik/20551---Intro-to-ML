@@ -9,6 +9,13 @@ def printer(state, nodes):
 
 
 def bfs(start_state):
+    """
+    Implementation of the Breadth First Search algorithm.
+
+    :param start_state: state to start running from.
+
+    :return: The goal stated that was reached
+    """
     print("\nBFS")
     expanded_counter = 0
 
@@ -36,9 +43,18 @@ def bfs(start_state):
 
 
     # If the loop ends without finding the goal
-    print(f"Goal not found in IDDFS. Total states expanded: {expanded_counter}.")
+    print(f"Goal not found in BFS. Total states expanded: {expanded_counter}.")
+    return None
 
 def iddfs(state, max_depth):
+    """
+    Implementation of the IDDFS algorithm.
+
+    :param state: start state
+    :param depth: maximum depth
+
+    :return: True if goal was reached, else False.
+    """
     print("\nIDDFS")
     expanded_counter = 0
     for depth in range(max_depth):
@@ -51,8 +67,16 @@ def iddfs(state, max_depth):
     return False
 
 def dfs(state, depth, expanded_counter):
-    if depth == 0 and state.is_goal(): # why do I check that depth is 0?
-                                        # I shouldn't be able to reach a goal in any other depth but stil
+    """
+    DFS implementation up to set depth
+
+    :param state: start state
+    :param depth: maximum depth
+    :param expanded_counter: expanded nodes counter, from previous iterations if needed
+
+    :return: Just a boolean value if the goal was reached. the function already handles printing the path to the goal.
+    """
+    if state.is_goal():
         printer(state, expanded_counter)
         return True, expanded_counter
     if depth > 0:
@@ -64,9 +88,25 @@ def dfs(state, depth, expanded_counter):
     return False, expanded_counter
 
 def compute_gbfs_heuristic(state):
+    """
+    Compute the heuristic value for the GBFS search algorithm.
+
+    :param state: state to compute heuristic for
+
+    :return: the overall heuristic measure of the state
+    """
     return sum([abs(item - i) for item, i in enumerate(state.config)])
 
 def gbfs(start_state, expanded_counter=0):
+    """
+    Implementation of the GBFS algorithm.
+    Uses a separate heuristic calculation function for easy replacement
+
+    :param start_state: The state to start from
+    :param expanded_counter: Optional parameter for setting the expanded nodes counter
+
+    :return: The goal state if found (in it is the path), None if goal state not reached
+    """
     print("\nGBFS")
     node = start_state
     frontier = []
@@ -107,7 +147,14 @@ def manhattan_distance(state):
     return total_distance
 
 def compute_astar_heuristic(state, distance_to):
+    """
+    Compute the heuristic value for the A* search algorithm.
 
+    :param state: state to compute heuristic for
+    :param distance_to: the distance to the state
+
+    :return: the overall heuristic measure of the state
+    """
     #return distance_to + manhattan_distance(state)
     total_distance = 0
 
@@ -123,6 +170,15 @@ def compute_astar_heuristic(state, distance_to):
     return distance_to + total_distance
 
 def a_star(start_state, expanded_counter=0):
+    """
+    Implementation of the A* algorithm
+    Uses a separate heuristic calculation function for easy replacement
+
+    :param start_state: The state to start from
+    :param expanded_counter: Optional parameter for setting the expanded nodes counter
+
+    :return: The goal state if found (in it is the path), None if goal state not reached
+    """
     print("\nA*")
     node = start_state
     frontier = []

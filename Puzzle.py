@@ -29,7 +29,6 @@ class PuzzleState(object):
         :param cost: The cost to reach this state. Defaults to 0.
 
         Attributes initialized:
-        - board: 2D list representation of the board state, used primarily for display purposes.
         - dimension: The board's dimension, which determines the board size.
         - cost: The cost associated with reaching this state from the root state.
         - parent: The parent node, allowing backtracking to the previous board state for solution retrieval.
@@ -51,7 +50,6 @@ class PuzzleState(object):
         if dimension * dimension != len(config_input):
             raise AttributeError("The length of config entered is not correct")
 
-        self.board = [config_input[i:i+3] for i in range(0, dimension * dimension, dimension)] # for printing
         self.dimension = dimension
         self.cost = cost
         self.parent = parent
@@ -73,10 +71,17 @@ class PuzzleState(object):
 
         :return: None
         """
+        board = [self.config[i:i+3] for i in range(0, self.dimension * self.dimension, self.dimension)] # for printing
         for i in range(self.dimension):  # print the i'th row every time
-            print(self.board[i])
+            print(board[i])
 
     def move(self, direction):
+        """
+        Wrapper function for executing moves.
+
+        :param direction: the direction to move the non-space tile to {Up, Down, Left, Right}
+        :return: A new PuzzleState instance, that has moved the "direction free" tile one step to that direction.
+        """
         blank_index = self.blank_row * self.dimension + self.blank_col
         target = blank_index + self.movement[direction]
 
@@ -98,18 +103,27 @@ class PuzzleState(object):
             return self.move("Left")
 
     def move_right(self):
+        """
+        See docs for move_left
+        """
         if self.blank_col == 0:
             return None
         else:
             return self.move("Right")
 
     def move_up(self):
+        """
+        See docs for move_left
+        """
         if self.blank_row == self.dimension - 1:
             return None
         else:
             return self.move("Up")
 
     def move_down(self):
+        """
+        See docs for move_left
+        """
         if self.blank_row == 0:
             return None
         else:
@@ -145,7 +159,11 @@ class PuzzleState(object):
 
     @staticmethod
     def find_moved_tile(current_state):
-
+        """
+        The function is responsible for finding the tile that was moved in order to reach the current state.
+        :param current_state:
+        :return:
+        """
         # Find the position of the blank tile
         blank_index = current_state.config.index(0)
 

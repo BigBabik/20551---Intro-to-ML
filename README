@@ -28,8 +28,22 @@ A* heuristic - Euclidian distance of each tile from it's square
 As to the optimality of each algorithm
 1. BFS - optimal result
 2. IDDFS - optimal result
-3. GBFS -
-4. A* - optimal result due to optimal heuristic (euclidian distance is shorter than manhattan distance)
+3. GBFS - For the config given in the excersize, The algorithm finds the optimal solution
+ in general though, to is not guaranteed to find an optimal solution.
+ The heuristic sums the abs values of the differences in value from the number in the tile to the number that should be there.
+ It is not admissible because for a state with two adjacent tiles misplaced,
+ the heuristic will give a value >= 2, even though one move may be needed.
+ for example the left state will have a heuristic of 2, even though the real value is 1
+ 1 0 2      0 1 2
+ 3 4 5  ->  3 4 5
+ 6 7 8      6 7 8
+
+ The heuristic is close in the form that is does capture in some sense tiles that are in the correct place
+ and penalizes further away distances (values will usually differ in a greater magnitude)
+ but is confounded with misplaced numbers from the same row/column
+
+4. A* - optimal result due to admissible heuristic (euclidian distance is shorter than manhattan distance and
+        manhattan distance is admissible, so by definition the euclidian heuristic is also)
 
 The program is run as follows -
 
